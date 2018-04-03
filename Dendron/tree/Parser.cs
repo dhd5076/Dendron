@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Dendron.tree
 {
@@ -11,7 +12,6 @@ namespace Dendron.tree
         public Parser(IEnumerable<string> lines)
         {
             _program = new Program();
-            //Adapted from the pseudocode on the polish notation wikipedia page
             foreach (var line in lines)
             {
                 var lineTokens = line.Split(' ');
@@ -28,12 +28,18 @@ namespace Dendron.tree
 
         public IDendronNode ParseExpression(IEnumerable<string> expressionTokens)
         {
-            foreach(var token in expressionTokens)
+            //Adapted from the pseudocode on the polish notation wikipedia page
+            var operationStack = new Stack<IDendronNode>();
+            var operandStack = new Stack<IDendronNode>();
+            foreach (var token in expressionTokens)
             {
-
+                if(Regex.IsMatch(token, @"^\d+$"))
+                {
+                    operandStack.Push(new Constant(int.Parse(token)));
+                }
             }
 
-            return null;
+            return operationStack.Pop();
         }
 
         public List<Machine.IInstruction> Compile()
