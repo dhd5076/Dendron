@@ -4,31 +4,57 @@ using System.Text;
 
 namespace Dendron.machine
 {
-    class Machine
+    internal class Machine
     {
-        private static Dictionary<String, int> variableTable;
-        private static Stack<int> stack;
+        private Machine() { }
 
-        public interface Instruction
+        private static Dictionary<string, int> _variableTable;
+        private static Stack<int> _stack;
+
+        private void Reset()
         {
-            void execute();
+            _stack = new Stack<int>();
+            _variableTable = new Dictionary<string, int>();
         }
 
-        public class Print : Instruction
+        public interface IInstruction
         {
-            void Instruction.execute()
+            void Execute();
+        }
+
+        public class Print : IInstruction
+        {
+            void IInstruction.Execute()
             {
-                Console.WriteLine();
+                Console.WriteLine("*** " + _stack.Pop());
             }
         }
 
-        public class Multiply : Instruction
+        public class Multiply : IInstruction
         {
-            void Instruction.execute()
+            void IInstruction.Execute()
             {
-                int rhsOP = stack.Pop();
-                int lhsOP = stack.Pop();
-                stack.Push(lhsOP * rhsOP);
+                throw new NotImplementedException();
+                /*
+                var rhsOpPop = _stack.Pop();
+                var lhsOpPop = _stack.Pop();
+                _stack.Push(lhsOpPop * rhsOpPop);
+                */
+            }
+        }
+
+        public class PushConstant : IInstruction
+        {
+            private readonly int _value;
+
+            public PushConstant(int value)
+            {
+                this._value = value;
+            }
+
+            void IInstruction.Execute()
+            {
+                _stack.Push(this._value);
             }
         }
     }

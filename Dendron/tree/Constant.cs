@@ -5,21 +5,20 @@ using Dendron.machine;
 
 namespace Dendron.tree
 {
-    internal class Print : IDendronNode
+    internal class Constant : IDendronNode
     {
-        private readonly IDendronNode _printee;
+        private readonly int _value;
 
-        public Print(IDendronNode printee)
+        public Constant(int value)
         {
-            this._printee = printee;
+            _value = value;
         }
 
         public List<Machine.IInstruction> Emit()
         {
             return new List<Machine.IInstruction>
             {
-                _printee.Emit()[0],
-                new Machine.Print()
+                new Machine.PushConstant(_value)
             };
         }
     }

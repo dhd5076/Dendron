@@ -1,36 +1,42 @@
 ﻿using Dendron.machine;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace Dendron.tree
 {
     internal class Parser
     {
         readonly Program _program;
-        public Parser(IEnumerable<string> tokens)
+        public Parser(IEnumerable<string> lines)
         {
             _program = new Program();
-            var operandStack = new Stack<string>();
-            var operatorStack = new Stack<string>();
-            var pendingOperand = false;
-            //Based on the pseudocode from the wikipedia page on polish notation
-            foreach (var token in tokens)
+            //Adapted from the pseudocode on the polish notation wikipedia page
+            foreach (var line in lines)
             {
-                if (token == "@") //If it is a an operator
+                var lineTokens = line.Split(' ');
+                switch (lineTokens[0])
                 {
-                    operatorStack.Push(token);
-                    pendingOperand = false;
-                }
-                else if (token == "1") //If it is an operand
-                {
-                    operandStack.Push(token);
-
+                    case "@":
+                        _program.AddAction(new Print(ParseExpression(lineTokens.Skip(1))));
+                        break;
+                    default:
+                        break;
                 }
             }
         }
 
-        public List<Machine.Instruction> Compile()
+        public IDendronNode ParseExpression(IEnumerable<string> expressionTokens)
+        {
+            foreach(var token in expressionTokens)
+            {
+
+            }
+
+            return null;
+        }
+
+        public List<Machine.IInstruction> Compile()
         {
             return _program.Emit();
         }

@@ -7,6 +7,6 @@ namespace Dendron.tree
 {
     internal interface IDendronNode
     {
-        List<Machine.Instruction> Emit();
+        List<Machine.IInstruction> Emit();
     }
 }

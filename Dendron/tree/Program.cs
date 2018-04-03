@@ -14,7 +14,7 @@ namespace Dendron.tree
             this._nodeList = new List<IDendronNode>();
         }
 
-        public List<Machine.Instruction> Emit()
+        public List<Machine.IInstruction> Emit()
         {
             throw new NotImplementedException();
         }
