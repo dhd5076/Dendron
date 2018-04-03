@@ -16,7 +16,12 @@ namespace Dendron.tree
 
         public List<Machine.IInstruction> Emit()
         {
-            throw new NotImplementedException();
+            var ret = new List<Machine.IInstruction>();
+            foreach(var node in _nodeList)
+            {
+                ret.AddRange(node.Emit());
+            }
+            return ret;
         }
 
         public void AddAction(IDendronNode node)

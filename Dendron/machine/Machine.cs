@@ -20,6 +20,7 @@ namespace Dendron.machine
         public interface IInstruction
         {
             void Execute();
+            string ToString();
         }
 
         public class Print : IInstruction
@@ -27,6 +28,11 @@ namespace Dendron.machine
             void IInstruction.Execute()
             {
                 Console.WriteLine("*** " + _stack.Pop());
+            }
+
+            public override string ToString()
+            {
+                return "Print";
             }
         }
 
@@ -40,6 +46,11 @@ namespace Dendron.machine
                 var lhsOpPop = _stack.Pop();
                 _stack.Push(lhsOpPop * rhsOpPop);
                 */
+            }
+
+            public override string ToString()
+            {
+                return "Multiply";
             }
         }
 
@@ -55,6 +66,11 @@ namespace Dendron.machine
             void IInstruction.Execute()
             {
                 _stack.Push(this._value);
+            }
+
+            public override string ToString()
+            {
+                return "Push Constant";
             }
         }
     }

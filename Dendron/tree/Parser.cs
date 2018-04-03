@@ -1,45 +1,40 @@
-﻿using Dendron.machine;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Dendron.machine;
 
 namespace Dendron.tree
 {
     internal class Parser
     {
-        readonly Program _program;
+        private readonly Program _program;
+
         public Parser(IEnumerable<string> lines)
         {
             _program = new Program();
             foreach (var line in lines)
             {
                 var lineTokens = line.Split(' ');
-                switch (lineTokens[0])
-                {
-                    case "@":
-                        _program.AddAction(new Print(ParseExpression(lineTokens.Skip(1))));
-                        break;
-                    default:
-                        break;
-                }
+                _program.AddAction(Parse(lineTokens));
             }
         }
 
-        public IDendronNode ParseExpression(IEnumerable<string> expressionTokens)
+        public IDendronNode Parse(IEnumerable<string> expressionTokens)
         {
-            //Adapted from the pseudocode on the polish notation wikipedia page
-            var operationStack = new Stack<IDendronNode>();
-            var operandStack = new Stack<IDendronNode>();
-            foreach (var token in expressionTokens)
+            var enumerable = expressionTokens.ToList();
+            if (enumerable.First() == "@") //If its a print statement
             {
-                if(Regex.IsMatch(token, @"^\d+$"))
-                {
-                    operandStack.Push(new Constant(int.Parse(token)));
-                }
+                return new Print(Parse(enumerable.Skip(1)));
             }
 
-            return operationStack.Pop();
+            if (Regex.IsMatch(enumerable.First(), @"^\d+$")) //If its an integer
+            {
+                return new Constant(int.Parse(enumerable.First()));
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public List<Machine.IInstruction> Compile()
